@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💗 Kalkulator Matriks 💗</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(135deg, #ffe6f0, #ffccd5);
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        color: #d6336c;
+        font-size: 2rem;
+    }
+    .matrix-input {
+        display: inline-block;
+        margin: 20px;
+        padding: 15px;
+        border-radius: 15px;
+        background-color: #fff0f6;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    label {
+        display: block;
+        margin-top: 5px;
+        font-weight: bold;
+        color: #a61e4d;
+    }
+    input {
+        width: 50px;
+        padding: 5px;
+        margin: 2px;
+        border: 1px solid #f783ac;
+        border-radius: 5px;
+        text-align: center;
+    }
+    select, button {
+        padding: 10px 15px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 8px;
+        background-color: #f783ac;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #d6336c;
+    }
+    .love-bg {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font-size: 2rem;
+        color: rgba(255, 0, 102, 0.3);
+    }
+    table {
+        margin: 10px auto;
+    }
+    td {
+        padding: 5px;
+    }
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #ffe3e8;
+        border-radius: 10px;
+        display: inline-block;
+    }
+</style>
+</head>
+<body>
+
+<div class="love-bg">❤️</div>
+<h1>💗 Kalkulator Matriks 💗</h1>
+
+<div>
+    <div class="matrix-input">
+        <h3>Matriks A ❤️</h3>
+        <label>Baris:</label><input type="number" id="rowsA" value="2" min="1">
+        <label>Kolom:</label><input type="number" id="colsA" value="2" min="1">
+        <div id="matrixA"></div>
+    </div>
+
+    <div class="matrix-input">
+        <h3>Matriks B ❤️</h3>
+        <label>Baris:</label><input type="number" id="rowsB" value="2" min="1">
+        <label>Kolom:</label><input type="number" id="colsB" value="2" min="1">
+        <div id="matrixB"></div>
+    </div>
+</div>
+
+<div>
+    <label>Pilih Operasi:</label>
+    <select id="operation">
+        <option value="add">Penjumlahan (+)</option>
+        <option value="subtract">Pengurangan (-)</option>
+        <option value="multiply">Perkalian (×)</option>
+        <option value="transposeA">Transpose A</option>
+        <option value="transposeB">Transpose B</option>
+    </select>
+    <br>
+    <button onclick="calculate()">💗 Hitung 💗</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<script>
+function createMatrixInputs(containerId, rows, cols) {
+    let container = document.getElementById(containerId);
+    container.innerHTML = "";
+    let table = document.createElement("table");
+    for (let i = 0; i < rows; i++) {
+        let tr = document.createElement("tr");
+        for (let j = 0; j < cols; j++) {
+            let td = document.createElement("td");
+            let input = document.createElement("input");
+            input.type = "number";
+            input.value = 0;
+            td.appendChild(input);
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+    container.appendChild(table);
+}
+
+document.getElementById("rowsA").addEventListener("input", () => {
+    createMatrixInputs("matrixA", +rowsA.value, +colsA.value);
+});
+document.getElementById("colsA").addEventListener("input", () => {
+    createMatrixInputs("matrixA", +rowsA.value, +colsA.value);
+});
+document.getElementById("rowsB").addEventListener("input", () => {
+    createMatrixInputs("matrixB", +rowsB.value, +colsB.value);
+});
+document.getElementById("colsB").addEventListener("input", () => {
+    createMatrixInputs("matrixB", +rowsB.value, +colsB.value);
+});
+
+createMatrixInputs("matrixA", 2, 2);
+createMatrixInputs("matrixB", 2, 2);
+
+function getMatrixValues(containerId) {
+    let inputs = document.querySelectorAll(`#${containerId} input`);
+    let rows = document.querySelectorAll(`#${containerId} tr`).length;
+    let cols = inputs.length / rows;
+    let matrix = [];
+    for (let i = 0; i < rows; i++) {
+        let row = [];
+        for (let j = 0; j < cols; j++) {
+            row.push(parseFloat(inputs[i * cols + j].value) || 0);
+        }
+        matrix.push(row);
+    }
+    return matrix;
+}
+
+function calculate() {
+    let A = getMatrixValues("matrixA");
+    let B = getMatrixValues("matrixB");
+    let op = document.getElementById("operation").value;
+    let result = [];
+
+    if (op === "add" || op === "subtract") {
+        if (A.length !== B.length || A[0].length !== B[0].length) {
+            alert("Untuk operasi ini, ukuran matriks harus sama!");
+            return;
+        }
+        for (let i = 0; i < A.length; i++) {
+            let row = [];
+            for (let j = 0; j < A[0].length; j++) {
+                row.push(op === "add" ? A[i][j] + B[i][j] : A[i][j] - B[i][j]);
+            }
+            result.push(row);
+        }
+    } else if (op === "multiply") {
+        if (A[0].length !== B.length) {
+            alert("Jumlah kolom A harus sama dengan jumlah baris B untuk perkalian!");
+            return;
+        }
+        for (let i = 0; i < A.length; i++) {
+            let row = [];
+            for (let j = 0; j < B[0].length; j++) {
+                let sum = 0;
+                for (let k = 0; k < A[0].length; k++) {
+                    sum += A[i][k] * B[k][j];
+                }
+                row.push(sum);
+            }
+            result.push(row);
+        }
+    } else if (op === "transposeA") {
+        for (let i = 0; i < A[0].length; i++) {
+            let row = [];
+            for (let j = 0; j < A.length; j++) {
+                row.push(A[j][i]);
+            }
+            result.push(row);
+        }
+    } else if (op === "transposeB") {
+        for (let i = 0; i < B[0].length; i++) {
+            let row = [];
+            for (let j = 0; j < B.length; j++) {
+                row.push(B[j][i]);
+            }
+            result.push(row);
+        }
+    }
+
+    displayResult(result);
+}
+
+function displayResult(matrix) {
+    let html = "<h3>💗 Hasil 💗</h3><table border='1'>";
+    matrix.forEach(row => {
+        html += "<tr>";
+        row.forEach(val => {
+            html += `<td>${val}</td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</table>";
+    document.getElementById("result").innerHTML = html;
+}
+</script>
+</body>
+</html>
